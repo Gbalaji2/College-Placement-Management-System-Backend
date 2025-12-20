@@ -13,23 +13,40 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Middleware
-// Middleware
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://placementmgmnt.netlify.app", // ✅ no trailing slash
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://placementmgmnt.netlify.app/",
-    ],
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman or mobile apps)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      } else {
+        return callback(new Error(`CORS blocked for origin ${origin}`));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 
 // Static folders
-app.use('/profileImgs', express.static(path.join(__dirname, 'public/profileImgs')));
-app.use('/resume', express.static(path.join(__dirname, 'public/resumes')));
-app.use('/offerLetter', express.static(path.join(__dirname, 'public/offerLetter')));
+app.use("/profileImgs", express.static(path.join(__dirname, "public/profileImgs")));
+app.use("/resume", express.static(path.join(__dirname, "public/resumes")));
+app.use("/offerLetter", express.static(path.join(__dirname, "public/offerLetter")));
+
+// ✅ Root route
+app.get("/", (req, res) => {
+  res.send("✅ CPMS Backend API is running successfully!");
+});
 
 // Database
 mongodb();
@@ -42,12 +59,12 @@ import managementRoutes from "./routes/management.route.js";
 import adminRoutes from "./routes/superuser.route.js";
 import companyRoutes from "./routes/company.route.js";
 
-app.use('/api/v1/user', userRoutes);
-app.use('/api/v1/student', studentRoutes);
-app.use('/api/v1/tpo', tpoRoutes);
-app.use('/api/v1/management', managementRoutes);
-app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/company', companyRoutes);
+app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/student", studentRoutes);
+app.use("/api/v1/tpo", tpoRoutes);
+app.use("/api/v1/management", managementRoutes);
+app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/company", companyRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
