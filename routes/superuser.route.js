@@ -11,20 +11,20 @@ const router = express.Router();
 // login
 router.post("/login", Login);
 
-// management
-router.get("/management-users", authenticateToken, managementUsers);
-router.post("/management-add-user", authenticateToken, managementAddUsers);
-router.post("/management-delete-user", authenticateToken, managementDeleteUsers);
+// management routes (admin only)
+router.get("/management-users", authenticateToken(["admin"]), managementUsers);
+router.post("/management-add-user", authenticateToken(["admin"]), managementAddUsers);
+router.post("/management-delete-user", authenticateToken(["admin"]), managementDeleteUsers);
 
-// TPO
-router.get("/tpo-users", authenticateToken, tpoUsers);
-router.post("/tpo-add-user", authenticateToken, tpoAddUsers);
-router.post("/tpo-delete-user", authenticateToken, tpoDeleteUsers);
+// TPO routes (admin only)
+router.get("/tpo-users", authenticateToken(["admin"]), tpoUsers);
+router.post("/tpo-add-user", authenticateToken(["admin"]), tpoAddUsers);
+router.post("/tpo-delete-user", authenticateToken(["admin"]), tpoDeleteUsers);
 
-// student
-router.get("/student-users", authenticateToken, studentUsers);
-router.post("/student-add-user", authenticateToken, studentAddUsers);
-router.post("/student-delete-user", authenticateToken, studentDeleteUsers);
-router.post("/student-approve", authenticateToken, studentApprove);
+// student routes (admin only)
+router.get("/student-users", authenticateToken(["admin"]), studentUsers);
+router.post("/student-add-user", authenticateToken(["admin"]), studentAddUsers);
+router.post("/student-delete-user", authenticateToken(["admin"]), studentDeleteUsers);
+router.post("/student-approve", authenticateToken(["admin"]), studentApprove);
 
 export default router;

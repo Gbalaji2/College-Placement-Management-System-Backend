@@ -18,25 +18,81 @@ const router = express.Router();
 router.post("/signup", Signup);
 router.post("/login", Login);
 
+// auth check
+router.get("/check-auth", authenticateToken(), (req, res) => {
+  res.status(200).json({
+    ok: true,
+    user: req.user,
+  });
+});
+
 // resume
-router.post("/upload-resume", uploadResume.single("resume"), UploadResume);
+router.post(
+  "/upload-resume",
+  authenticateToken(["student"]),
+  uploadResume.single("resume"),
+  UploadResume
+);
 
 // offer letter
-router.post("/upload-offer-letter", uploadOfferLetter.single("offerLetter"), UploadOfferLetter);
-router.post("/delete-offer-letter/:jobId/:studentId", DeleteOfferLetter);
+router.post(
+  "/upload-offer-letter",
+  authenticateToken(["student"]),
+  uploadOfferLetter.single("offerLetter"),
+  UploadOfferLetter
+);
+
+router.post(
+  "/delete-offer-letter/:jobId/:studentId",
+  authenticateToken(["student"]),
+  DeleteOfferLetter
+);
 
 // jobs
-router.put("/job/:jobId/:studentId", AppliedToJob);
-router.get("/check-applied/:jobId/:studentId", CheckAlreadyApplied);
-router.post("/update-status/:jobId/:studentId", UpdateJobStatus);
+router.put(
+  "/job/:jobId/:studentId",
+  authenticateToken(["student"]),
+  AppliedToJob
+);
+
+router.get(
+  "/check-applied/:jobId/:studentId",
+  authenticateToken(["student"]),
+  CheckAlreadyApplied
+);
+
+router.post(
+  "/update-status/:jobId/:studentId",
+  authenticateToken(["student"]),
+  UpdateJobStatus
+);
 
 // internships
 router.get("/internship", GetInternships);
-router.post("/update-internship", UpdateInternship);
-router.post("/delete-internship", DeleteInternship);
+
+router.post(
+  "/update-internship",
+  authenticateToken(["student"]),
+  UpdateInternship
+);
+
+router.post(
+  "/delete-internship",
+  authenticateToken(["student"]),
+  DeleteInternship
+);
 
 // admin only routes
-router.get("/all-students-data-year-and-branch", authenticateToken, StudentDataYearBranchWise);
-router.get("/notify-interview-hired", authenticateToken, NotifyStudentStatus);
+router.get(
+  "/all-students-data-year-and-branch",
+  authenticateToken(["admin"]),
+  StudentDataYearBranchWise
+);
+
+router.get(
+  "/notify-interview-hired",
+  authenticateToken(["admin"]),
+  NotifyStudentStatus
+);
 
 export default router;

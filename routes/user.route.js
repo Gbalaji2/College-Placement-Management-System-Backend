@@ -12,21 +12,26 @@ import { UserData } from "../controllers/user/user.show-data.js";
 const router = express.Router();
 
 // user details
-router.get("/detail", authenticateToken, UserDetail);
+router.get("/detail", authenticateToken(), UserDetail);
 
-// all users count
+// all users count (public)
 router.get("/all-users", AllUsersLen);
 
 // get single user by id
-router.get("/:userId", authenticateToken, UserData);
+router.get("/:userId", authenticateToken(), UserData);
 
-// upload user profile photo
-router.post("/upload-photo", uploadUserProfile.single("profileImgs"), UpdatePhoto);
+// upload user profile photo (must be logged in)
+router.post(
+  "/upload-photo",
+  authenticateToken(),
+  uploadUserProfile.single("profileImgs"),
+  UpdatePhoto
+);
 
 // update profile
-router.post("/update-profile", authenticateToken, UpdateProfile);
+router.post("/update-profile", authenticateToken(), UpdateProfile);
 
 // change password
-router.post("/change-password", authenticateToken, UpdatePassword);
+router.post("/change-password", authenticateToken(), UpdatePassword);
 
 export default router;

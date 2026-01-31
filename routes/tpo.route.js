@@ -11,11 +11,11 @@ const router = express.Router();
 router.post("/login", Login);
 
 // jobs
-router.post("/post-job", authenticateToken, PostJob);
-router.get("/jobs", AllJobs);
-router.post("/delete-job", DeleteJob);
-router.get("/job/:jobId", authenticateToken, JobData);
-router.get("/job/applicants/:jobId", authenticateToken, JobWithApplicants);
-router.get("/myjob/:studentId", authenticateToken, StudentJobsApplied);
+router.post("/post-job", authenticateToken(["tpo", "admin"]), PostJob);
+router.get("/jobs", AllJobs); // public
+router.post("/delete-job", authenticateToken(["tpo", "admin"]), DeleteJob);
+router.get("/job/:jobId", authenticateToken(), JobData);
+router.get("/job/applicants/:jobId", authenticateToken(["tpo", "admin"]), JobWithApplicants);
+router.get("/myjob/:studentId", authenticateToken(["student"]), StudentJobsApplied);
 
 export default router;
