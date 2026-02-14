@@ -19,7 +19,7 @@ router.post("/signup", Signup);
 router.post("/login", Login);
 
 // auth check
-router.get("/check-auth", authenticateToken(), (req, res) => {
+router.get("/check-auth", authenticateToken(["student", "admin", "tpo", "management", "company"]), (req, res) => {
   res.status(200).json({
     ok: true,
     user: req.user,

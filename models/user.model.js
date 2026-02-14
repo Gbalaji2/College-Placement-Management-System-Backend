@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
   },
   number: { type: Number },
   password: { type: String, required: true },
-  role: { type: String, enum: ['student', 'tpo_admin', 'management_admin', 'superuser'], required: true },
+  role: { type: String, enum: ["student", "tpo", "management", "admin", "company"], required: true },
   profile: { type: String, default: '/profileImgs/default/defaultProfileImg.jpg' },
   fullAddress: {
     address: { type: String },

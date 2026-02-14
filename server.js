@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://placementmgmnt.netlify.app"
+  "https://collegeplacementfrontend.netlify.app"
 ];
 
 app.use(
@@ -25,13 +25,17 @@ app.use(
       if (allowedOrigins.includes(origin)) return callback(null, true);
       return callback(new Error(`CORS blocked for origin ${origin}`));
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   })
 );
 
+// ✅ handle preflight
+app.options("*", cors());
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Static folders
 app.use("/profileImgs", express.static(path.join(__dirname, "public/profileImgs")));
